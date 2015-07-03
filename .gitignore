@@ -1,11 +1,17 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /#auto-delimiter-completer.el#
 /.#auto-delimiter-completer.el
 /#scratch.el#
 =======
+=======
+>>>>>>> fd33034fd36c209e20876f1217720136f14d7310
 # Compiled
 *.elc
 
 # Packaging
 .cask
+<<<<<<< HEAD
 >>>>>>> Initial commit
+=======
+>>>>>>> fd33034fd36c209e20876f1217720136f14d7310
