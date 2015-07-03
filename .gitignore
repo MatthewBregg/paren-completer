@@ -1,3 +1,11 @@
+<<<<<<< HEAD
 /#auto-delimiter-completer.el#
 /.#auto-delimiter-completer.el
 /#scratch.el#
+=======
+# Compiled
+*.elc
+
+# Packaging
+.cask
+>>>>>>> Initial commit
