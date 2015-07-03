@@ -104,10 +104,10 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
   )
 
 
-(defun process-and-add-all-delimiters ()
+(defun paren-completer--process-and-add-all-delimiters ()
   "Process buffer, then add all delimiters."
   (interactive)
-  (paren-completer--process-and-add-delimiter 'add-all-delimiters-in)
+  (paren-completer--process-and-add-delimiter 'paren-completer--add-all-delimiters-in)
   )
 
 (provide 'paren-completer)

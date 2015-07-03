@@ -7,11 +7,11 @@ That's where this package comes in!
 This package has two, public facing functions 
 
 #+BEGIN_SRC elisp
-paren-completer--add-delimiter-in
+paren-completer--process-and-add-single-delimiter-in
 #+END_SRC
 and 
 #+BEGIN_SRC elisp
-paren-completer--add-all-delimiters-in
+paren-completer--process-and-add-all-delimiters-in
 #+END_SRC
 
 Calling the former will insert the next delimiter to close the nearest open one.
