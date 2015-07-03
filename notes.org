@@ -1,3 +1,7 @@
+* This files contains random stuff I decided to put in it while workong on this. 
+This include stuff like emacs manual pages, random code, etc. 
+* Random shit
+look into check-parens function?
 #+BEGIN_SRC 
 
 ;; (defun is-opening-charp? (char) 
