@@ -89,6 +89,19 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
   (insert-char (paren-completer--get-matching (car paren-completer--delimiter-stack))))
   (setq paren-completer--delimiter-stack (cdr paren-completer--delimiter-stack))
   )
+
+(defun paren-completer--add-delimiter-in-with-newline ()
+  "Add a single delimiter with newline."
+  (paren-completer--add-delimiter-in)
+  (insert-char 10)
+  )
+
+(defun paren-completer--add-all-delimiters-in-with-newline ()
+  "Add all delimiters with newline."
+  (paren-completer--add-delimiter-in-with-newline)
+  (if (eq paren-completer--delimiter-stack nil) (message "Done")
+    (paren-completer--add-all-delimiters-in-with-newline))
+  )
 (defun paren-completer--add-all-delimiters-in ()
   "Add all delimiters."
   (paren-completer--add-delimiter-in)
@@ -108,6 +121,20 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
   "Process buffer, then add all delimiters."
   (interactive)
   (paren-completer--process-and-add-delimiter 'paren-completer--add-all-delimiters-in)
+  )
+
+
+(defun paren-completer--process-and-add-single-delimiter-with-newline ()
+  "Process buffer, then add a delimiters."
+  (interactive)
+  (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter-in-with-newline)
+  )
+
+
+(defun paren-completer--process-and-add-all-delimiters-with-newline ()
+  "Process buffer, then add all delimiters."
+  (interactive)
+  (paren-completer--process-and-add-delimiter 'paren-completer--add-all-delimiters-in-with-newline)
   )
 
 (provide 'paren-completer)

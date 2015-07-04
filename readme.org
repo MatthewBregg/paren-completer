@@ -4,7 +4,7 @@ Don't like the heavy handed current solutions, that complete while you type, wit
 That's where this package comes in!
 
 * Usage 
-This package has two, public facing functions 
+This package has four, public facing functions 
 
 #+BEGIN_SRC elisp
 paren-completer--process-and-add-single-delimiter-in
@@ -12,6 +12,12 @@ paren-completer--process-and-add-single-delimiter-in
 and 
 #+BEGIN_SRC elisp
 paren-completer--process-and-add-all-delimiters-in
+#+END_SRC
+Along with a version that inserts a newline after each delimiter,
+
+#+BEGIN_SRC elisp
+paren-completer--process-and-add-single-delimiter-in-with-newline
+paren-completer--process-and-add-all-delimiters-in-with-newline
 #+END_SRC
 
 Calling the former will insert the next delimiter to close the nearest open one.
