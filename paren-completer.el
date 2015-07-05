@@ -1,7 +1,9 @@
 ;;; paren-completer.el --- Complete Delimiters
-;;; Version: 1.0
+;;; Version: 1.1
 ;;; package  --- Summary : A package to automatically, language agnostically, fill in delimiters.
-;;; Commentary: 
+;;; Commentary:
+;; Provides 4 functions to generically auto-complete delimiters.
+;; Avoids use of syntax table, instead relies on user defined lists. (The syntax table didn't seem to have everything I wanted, like <> brackets in c++.)
 ;; See readme.org
 
 
@@ -9,7 +11,7 @@
 ;;;;IDEA!
 ;; A) If someone does complete all delimiters, then just rescan the whole buffer!
 ;; B) something like (disable-limiters ...) remvoes the limiters given to it from the delimiter list.
-;; C) (add-limiters ...) takes in pairs of delimiters, and adds them to the list. 
+;; C) (add-limiters ...) takes in pairs of delimiters, and adds them to the list.
 ;; Can't just use the current hooks, as if someone moves the cursor, it won't work!!!
 ;;Instead, just go through the whole buffer, it's not as slow as I thought.  Tested on a 128,000 line file, did it within a
 ;;second or two.... Since a 128000 file is going to be very rare, that should be fine....
