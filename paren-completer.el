@@ -3,7 +3,9 @@
 ;; Copyright (C) 2015  Matthew Bregg
 
 ;; Author: Matthew Bregg
+;; Mantainer: Matthew Bregg
 ;; Keywords: convenience
+;; URL: https://github.com/MatthewBregg/paren-completer
 ;; Version: 1.2
 ;; Package-Requires: ((emacs "24.3"))
 
