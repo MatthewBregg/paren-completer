@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2015  Matthew Bregg
 
-;; Author: Matthew Bregg <ultimanium@ulti-desktop>
+;; Author: Matthew Bregg
 ;; Keywords: convenience
 ;; Version: 1.2
 ;; Package-Requires: ((emacs "24.3"))
