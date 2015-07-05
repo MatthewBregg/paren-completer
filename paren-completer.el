@@ -1,23 +1,33 @@
-;;; paren-completer.el --- Complete Delimiters
-;;; Version: 1.2
-;;; package  --- Summary : A package to automatically, language agnostically, fill in delimiters.
+;;; paren-completer.el --- Automatically, language agnostically, fill in delimiters.  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2015  Matthew Bregg
+
+;; Author: Matthew Bregg <ultimanium@ulti-desktop>
+;; Keywords: convenience
+;; Version: 1.2
+;; Package-Requires: ((emacs "24.3"))
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 ;;; Commentary:
+
 ;; Provides 4 functions to generically auto-complete delimiters.
-;; Avoids use of syntax table, instead relies on user defined lists. (The syntax table didn't seem to have everything I wanted, like <> brackets in c++.)
+;; Avoids use of syntax table, instead relies on user defined lists.
+;; (The syntax table didn't seem to have everything I wanted, like <> brackets in c++.)
 ;; See readme.org
 
-
-
-;;;;IDEA!
-;; A) If someone does complete all delimiters, then just rescan the whole buffer!
-;; B) something like (disable-limiters ...) remvoes the limiters given to it from the delimiter list.
-;; C) (add-limiters ...) takes in pairs of delimiters, and adds them to the list.
-;; Can't just use the current hooks, as if someone moves the cursor, it won't work!!!
-;;Instead, just go through the whole buffer, it's not as slow as I thought.  Tested on a 128,000 line file, did it within a
-;;second or two.... Since a 128000 file is going to be very rare, that should be fine....
-
 ;;; Code:
-
 
 (defgroup paren-completer nil
   "A package to automatically, language agnostically, fill in delimiters"
@@ -141,6 +151,7 @@ DELIMITER-STACK : The delimiters found so far"
   (interactive)
   (paren-completer--process-and-add-delimiter 'paren-completer--add-all-delimiters-with-newline)
   )
+
 
 (provide 'paren-completer)
 ;;; paren-completer.el ends here
