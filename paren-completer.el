@@ -64,14 +64,14 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
 (defun paren-completer--process-string-added (string)
   "Process given STRING to build delimiter list."
   ;(message (format "String is %s" string))
-  (let ((paren-completer--delimiter-stack (list)))
+  (let ((delimiter-stack (list)))
   (dotimes (i (length string))
     (if (paren-completer--is-opening-charp? (aref string i))
-        (setq paren-completer--delimiter-stack (cons (aref string i) paren-completer--delimiter-stack)))
+        (setq delimiter-stack (cons (aref string i) delimiter-stack)))
     (if (paren-completer--is-closing-charp? (aref string i))
-        (setq paren-completer--delimiter-stack (cdr paren-completer--delimiter-stack)))
+        (setq delimiter-stack (cdr delimiter-stack)))
     )
-  paren-completer--delimiter-stack))
+  delimiter-stack))
 
 (defun paren-completer--get-string-upto-point ()
   "Get buffer-substring-with-no-properties up to point."
@@ -84,31 +84,35 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
   (funcall delimiter-adder stack);;Add the delimiter in, and end
   ))
 
-(defun paren-completer--add-delimiter (paren-completer--delimiter-stack)
-  "Add a single delimiter."
-  (if (eq paren-completer--delimiter-stack nil) (message "No delimiters to add?!")
-  (insert-char (paren-completer--get-matching (car paren-completer--delimiter-stack))))
-  (setq paren-completer--delimiter-stack (cdr paren-completer--delimiter-stack))
-  paren-completer--delimiter-stack)
+(defun paren-completer--add-delimiter (delimiter-stack)
+  "Add a single delimiter.
+DELIMITER-STACK : The delimiters found so far"
+  (if (eq delimiter-stack nil) (message "No delimiters to add?!")
+  (insert-char (paren-completer--get-matching (car delimiter-stack))))
+  (setq delimiter-stack (cdr delimiter-stack))
+  delimiter-stack)
 
-(defun paren-completer--add-delimiter-with-newline (paren-completer--delimiter-stack)
-  "Add a single delimiter with newline."
-  (let ((paren-completer--delimiter-stack (paren-completer--add-delimiter paren-completer--delimiter-stack)))
+(defun paren-completer--add-delimiter-with-newline (delimiter-stack)
+  "Add a single delimiter with newline.
+DELIMITER-STACK : The delimiters found so far"
+  (let ((delimiter-stack (paren-completer--add-delimiter delimiter-stack)))
   (insert-char 10)
-  paren-completer--delimiter-stack))
+  delimiter-stack))
 
-(defun paren-completer--add-all-delimiters-with-newline (paren-completer--delimiter-stack)
-  "Add all delimiters with newline."
-  (let ((paren-completer--delimiter-stack (paren-completer--add-delimiter-with-newline paren-completer--delimiter-stack)))
-  (if (eq paren-completer--delimiter-stack nil) (message "Done")
-    (paren-completer--add-all-delimiters-with-newline paren-completer--delimiter-stack))
-  paren-completer--delimiter-stack))
-(defun paren-completer--add-all-delimiters (paren-completer--delimiter-stack)
-  "Add all delimiters."
-  (let ((paren-completer--delimiter-stack (paren-completer--add-delimiter paren-completer--delimiter-stack)))
-  (if (eq paren-completer--delimiter-stack nil) (message "Done")
-    (paren-completer--add-all-delimiters paren-completer--delimiter-stack))
-  paren-completer--delimiter-stack))
+(defun paren-completer--add-all-delimiters-with-newline (delimiter-stack)
+  "Add all delimiters with newline.
+DELIMITER-STACK : The delimiters found so far"
+  (let ((delimiter-stack (paren-completer--add-delimiter-with-newline delimiter-stack)))
+  (if (eq delimiter-stack nil) (message "Done")
+    (paren-completer--add-all-delimiters-with-newline delimiter-stack))
+  delimiter-stack))
+(defun paren-completer--add-all-delimiters (delimiter-stack)
+  "Add all delimiters.
+DELIMITER-STACK : The delimiters found so far"
+  (let ((delimiter-stack (paren-completer--add-delimiter delimiter-stack)))
+  (if (eq delimiter-stack nil) (message "Done")
+    (paren-completer--add-all-delimiters delimiter-stack))
+  delimiter-stack))
     
      
 (defun paren-completer-add-single-delimiter ()
