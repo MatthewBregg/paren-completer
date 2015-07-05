@@ -7,17 +7,17 @@ That's where this package comes in!
 This package has four, public facing functions 
 
 #+BEGIN_SRC elisp
-paren-completer--process-and-add-single-delimiter-in
+paren-completer-add-single-delimiter
 #+END_SRC
 and 
 #+BEGIN_SRC elisp
-paren-completer--process-and-add-all-delimiters-in
+paren-completer-add-all-delimiters
 #+END_SRC
 Along with a version that inserts a newline after each delimiter,
 
 #+BEGIN_SRC elisp
-paren-completer--process-and-add-single-delimiter-in-with-newline
-paren-completer--process-and-add-all-delimiters-in-with-newline
+paren-completer-add-single-delimiter-with-newline
+paren-completer-add-all-delimiters-with-newline
 #+END_SRC
 
 Calling the former will insert the next delimiter to close the nearest open one.

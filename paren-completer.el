@@ -1,5 +1,5 @@
 ;;; paren-completer.el --- Complete Delimiters
-;;; Version: 1.1
+;;; Version: 1.2
 ;;; package  --- Summary : A package to automatically, language agnostically, fill in delimiters.
 ;;; Commentary:
 ;; Provides 4 functions to generically auto-complete delimiters.
@@ -27,9 +27,7 @@
   )
 
 
-(make-variable-buffer-local 'paren-completer--delimiter-stack)
-(make-variable-buffer-local 'paren-completer--last-processed-point)
-(defvar paren-completer--delimiter-stack (list) "List of un-matched delimiters.")
+
 (defcustom paren-completer--open-delimiter-list (list ?\( ?\[ ?\< ?\{ )
   "List of opening delimiters to look for.  Must be in same order as close-delimiter-list.")
 (defcustom paren-completer--close-delimiter-list (list ?\) ?\] ?\> ?\} )
@@ -66,13 +64,14 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
 (defun paren-completer--process-string-added (string)
   "Process given STRING to build delimiter list."
   ;(message (format "String is %s" string))
+  (let ((paren-completer--delimiter-stack (list)))
   (dotimes (i (length string))
     (if (paren-completer--is-opening-charp? (aref string i))
         (setq paren-completer--delimiter-stack (cons (aref string i) paren-completer--delimiter-stack)))
     (if (paren-completer--is-closing-charp? (aref string i))
         (setq paren-completer--delimiter-stack (cdr paren-completer--delimiter-stack)))
     )
-  )
+  paren-completer--delimiter-stack))
 
 (defun paren-completer--get-string-upto-point ()
   "Get buffer-substring-with-no-properties up to point."
@@ -80,63 +79,63 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
   )
 (defun paren-completer--process-and-add-delimiter (delimiter-adder)
   "Process buffer up to point, then run given DELIMITER-ADDER function."
-  (setq paren-completer--delimiter-stack (list)) ;;Clear the list
-  (paren-completer--process-string-added (paren-completer--get-string-upto-point));;GetTheCurrentBufferUpToPoint
-  (funcall delimiter-adder);;Add the delimiter in, and end
-  )
+  (let ((stack (paren-completer--process-string-added (paren-completer--get-string-upto-point))))
+  ;;GetTheCurrentBufferUpToPoint
+  (funcall delimiter-adder stack);;Add the delimiter in, and end
+  ))
 
-(defun paren-completer--add-delimiter-in ()
+(defun paren-completer--add-delimiter (paren-completer--delimiter-stack)
   "Add a single delimiter."
   (if (eq paren-completer--delimiter-stack nil) (message "No delimiters to add?!")
   (insert-char (paren-completer--get-matching (car paren-completer--delimiter-stack))))
   (setq paren-completer--delimiter-stack (cdr paren-completer--delimiter-stack))
-  )
+  paren-completer--delimiter-stack)
 
-(defun paren-completer--add-delimiter-in-with-newline ()
+(defun paren-completer--add-delimiter-with-newline (paren-completer--delimiter-stack)
   "Add a single delimiter with newline."
-  (paren-completer--add-delimiter-in)
+  (let ((paren-completer--delimiter-stack (paren-completer--add-delimiter paren-completer--delimiter-stack)))
   (insert-char 10)
-  )
+  paren-completer--delimiter-stack))
 
-(defun paren-completer--add-all-delimiters-in-with-newline ()
+(defun paren-completer--add-all-delimiters-with-newline (paren-completer--delimiter-stack)
   "Add all delimiters with newline."
-  (paren-completer--add-delimiter-in-with-newline)
+  (let ((paren-completer--delimiter-stack (paren-completer--add-delimiter-with-newline paren-completer--delimiter-stack)))
   (if (eq paren-completer--delimiter-stack nil) (message "Done")
-    (paren-completer--add-all-delimiters-in-with-newline))
-  )
-(defun paren-completer--add-all-delimiters-in ()
+    (paren-completer--add-all-delimiters-with-newline paren-completer--delimiter-stack))
+  paren-completer--delimiter-stack))
+(defun paren-completer--add-all-delimiters (paren-completer--delimiter-stack)
   "Add all delimiters."
-  (paren-completer--add-delimiter-in)
+  (let ((paren-completer--delimiter-stack (paren-completer--add-delimiter paren-completer--delimiter-stack)))
   (if (eq paren-completer--delimiter-stack nil) (message "Done")
-    (paren-completer--add-all-delimiters-in))
-  )
+    (paren-completer--add-all-delimiters paren-completer--delimiter-stack))
+  paren-completer--delimiter-stack))
     
      
-(defun paren-completer--process-and-add-single-delimiter ()
+(defun paren-completer-add-single-delimiter ()
   "Process buffer, then add a delimiters."
   (interactive)
-  (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter-in)
+  (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter)
   )
 
 
-(defun paren-completer--process-and-add-all-delimiters ()
+(defun paren-completer-add-all-delimiters ()
   "Process buffer, then add all delimiters."
   (interactive)
-  (paren-completer--process-and-add-delimiter 'paren-completer--add-all-delimiters-in)
+  (paren-completer--process-and-add-delimiter 'paren-completer--add-all-delimiters)
   )
 
 
-(defun paren-completer--process-and-add-single-delimiter-with-newline ()
+(defun paren-completer-add-single-delimiter-with-newline ()
   "Process buffer, then add a delimiters."
   (interactive)
-  (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter-in-with-newline)
+  (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter-with-newline)
   )
 
 
-(defun paren-completer--process-and-add-all-delimiters-with-newline ()
+(defun paren-completer-add-all-delimiters-with-newline ()
   "Process buffer, then add all delimiters."
   (interactive)
-  (paren-completer--process-and-add-delimiter 'paren-completer--add-all-delimiters-in-with-newline)
+  (paren-completer--process-and-add-delimiter 'paren-completer--add-all-delimiters-with-newline)
   )
 
 (provide 'paren-completer)
