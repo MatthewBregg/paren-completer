@@ -126,28 +126,28 @@ DELIMITER-STACK : The delimiters found so far"
     (paren-completer--add-all-delimiters delimiter-stack))
   delimiter-stack))
     
-     
+;;;###autoload
 (defun paren-completer-add-single-delimiter ()
   "Process buffer, then add a delimiters."
   (interactive)
   (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter)
   )
 
-
+;;;###autoload
 (defun paren-completer-add-all-delimiters ()
   "Process buffer, then add all delimiters."
   (interactive)
   (paren-completer--process-and-add-delimiter 'paren-completer--add-all-delimiters)
   )
 
-
+;;;###autoload
 (defun paren-completer-add-single-delimiter-with-newline ()
   "Process buffer, then add a delimiters."
   (interactive)
   (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter-with-newline)
   )
 
-
+;;;###autoload
 (defun paren-completer-add-all-delimiters-with-newline ()
   "Process buffer, then add all delimiters."
   (interactive)
