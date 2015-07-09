@@ -90,14 +90,18 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
   (let ((old-point (point))
         (delimiter-stack (list)))
   (dotimes (i (length string))
-    (cond ((and paren-completer--ignore-commentsp? (paren-completer--is-in-commentp? (+ 1 i))) nil)
-          ((and paren-completer--ignore-stringsp? (paren-completer--is-in-stringp? (+ 1 i))) nil)
-          (t
-    (if (paren-completer--is-opening-charp? (aref string i))
-        (setq delimiter-stack (cons (aref string i) delimiter-stack)))
-    (if (paren-completer--is-closing-charp? (aref string i))
-        (setq delimiter-stack (cdr delimiter-stack)))
-    )))
+
+    (if (paren-completer--is-opening-charp? (aref string i)) ;;Copypaste, will clean up later
+        (cond ((and paren-completer--ignore-commentsp? (paren-completer--is-in-commentp? (+ 1 i))) nil)
+              ((and paren-completer--ignore-stringsp? (paren-completer--is-in-stringp? (+ 1 i))) nil)
+              (t
+               (setq delimiter-stack (cons (aref string i) delimiter-stack)))))
+      (if (paren-completer--is-closing-charp? (aref string i))
+          (cond ((and paren-completer--ignore-commentsp? (paren-completer--is-in-commentp? (+ 1 i))) nil)
+                ((and paren-completer--ignore-stringsp? (paren-completer--is-in-stringp? (+ 1 i))) nil)
+                (t
+                 (setq delimiter-stack (cdr delimiter-stack)))))
+    )
   (syntax-ppss old-point)
   delimiter-stack))
 
