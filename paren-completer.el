@@ -6,7 +6,7 @@
 ;; Mantainer: Matthew Bregg
 ;; Keywords: convenience
 ;; URL: https://github.com/MatthewBregg/paren-completer
-;; Version: 1.3.2
+;; Version: 1.3.3
 ;; Package-Requires: ((emacs "24.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
