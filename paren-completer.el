@@ -44,7 +44,8 @@
   "List of opening delimiters to look for.  Must be in same order as close-delimiter-list.")
 (defcustom paren-completer--close-delimiter-list (list ?\) ?\] ?\> ?\} )
   "List of closing delimiters to look for.  Must be in same order as open-delimiter-list.")
-(defvar paren-completer--neutral-delimiter-list (list ?\' ?\") "List of nuetral delimiters.  Not used atm.")
+;(defvar paren-completer--neutral-delimiter-list (list ?\' ?\") "List of nuetral delimiters.  Not used atm.")
+(defcustom paren-completer--complete-stringsp? t "If true, will attempt to close strings as well.")
 
 (defun paren-completer--is-opening-charp? (char)
   "Checks if CHAR is an opening delimiter."
@@ -55,6 +56,15 @@
   "Checks if CHAR is a closing delimiter."
   (member char paren-completer--close-delimiter-list)
   )
+(defun paren-completer--is-in-stringp? (position)
+  "Checks if the given POSITION is inside a string. Moves cursor to that position. Nil if not in string, else t."
+       (nth 3 (syntax-ppss position))
+       )
+
+(defun paren-completer--get-string/comment-open-position? (position)
+  "Finds the opening delimiter to the current string/comment for the given POSITION. Moves cursor to that position"
+       (nth 8 (syntax-ppss position))
+       )
 
 (defun paren-completer--get-matching-helper (open-delimiter open-list closed-list)
   "Helper for get-matching.
@@ -98,10 +108,17 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
 
 (defun paren-completer--add-delimiter (delimiter-stack)
   "Add a single delimiter.
-DELIMITER-STACK : The delimiters found so far"
-  (if (eq delimiter-stack nil) (message "No delimiters to add?!")
-  (insert-char (paren-completer--get-matching (car delimiter-stack))))
-  (setq delimiter-stack (cdr delimiter-stack))
+DELIMITER-STACK : The delimiters found so far.
+Messy, but the cond statement handles the
+special cases of in a comment/string, and then in the end it returns
+a list of open/closing delimiters."
+(let ((string? (paren-completer--is-in-stringp? (point))))
+  (cond ((and paren-completer--complete-stringsp? string?)
+                                               (insert-char string?))
+        (t
+         (if (eq delimiter-stack nil) (message "No delimiters to add?!")
+            (insert-char (paren-completer--get-matching (car delimiter-stack)))
+           (setq delimiter-stack (cdr delimiter-stack))))))
   delimiter-stack)
 
 (defun paren-completer--add-delimiter-with-newline (delimiter-stack)
