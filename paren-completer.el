@@ -6,7 +6,7 @@
 ;; Mantainer: Matthew Bregg
 ;; Keywords: convenience
 ;; URL: https://github.com/MatthewBregg/paren-completer
-;; Version: 1.3.1
+;; Version: 1.3.2
 ;; Package-Requires: ((emacs "24.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -40,9 +40,9 @@
 
 
 
-(defcustom paren-completer--open-delimiter-list (list ?\( ?\[ ?\< ?\{ )
+(defcustom paren-completer--open-delimiter-list (list ?\( ?\[ ?\{ )
   "List of opening delimiters to look for.  Must be in same order as close-delimiter-list.")
-(defcustom paren-completer--close-delimiter-list (list ?\) ?\] ?\> ?\} )
+(defcustom paren-completer--close-delimiter-list (list ?\) ?\] ?\} )
   "List of closing delimiters to look for.  Must be in same order as open-delimiter-list.")
 ;(defvar paren-completer--neutral-delimiter-list (list ?\' ?\") "List of nuetral delimiters.  Not used atm.")
 (defcustom paren-completer--complete-stringsp? t "If true, will attempt to close strings as well.")
