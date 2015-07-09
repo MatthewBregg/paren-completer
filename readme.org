@@ -49,5 +49,13 @@ Is quite problematic.
 Caching the point won't work, because it's too easy to be at the same point, despite having made changes.
 Could make a hook to hook into on buffer change, but that would likely cancel any performance gains, might as well just run it multiple times.... ( Plus that's a bit uglier.)
 
+* Customizations
+- paren-completer--complete-stringsp? : If true, use the syntax table to auto-close strings also.
+- paren-completer--ignore-commentsp? : If true, ignore delimiters in comments
+- paren-completer--ignore-stringsp? : If true, ignore delimiters within strings
+  
+* TODO
+- Possibly use http://www.gnu.org/software/emacs/manual/html_node/elisp/Parser-State.html#Parser-State to avoid scanning everything? Future thing to do...
+- Switch to the syntax table for checking delimiters, original reason not to is gone....
 
 
