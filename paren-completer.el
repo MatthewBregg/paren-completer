@@ -6,7 +6,7 @@
 ;; Mantainer: Matthew Bregg
 ;; Keywords: convenience
 ;; URL: https://github.com/MatthewBregg/paren-completer
-;; Version: 1.2.1
+;; Version: 1.3.1
 ;; Package-Requires: ((emacs "24.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -46,6 +46,8 @@
   "List of closing delimiters to look for.  Must be in same order as open-delimiter-list.")
 ;(defvar paren-completer--neutral-delimiter-list (list ?\' ?\") "List of nuetral delimiters.  Not used atm.")
 (defcustom paren-completer--complete-stringsp? t "If true, will attempt to close strings as well.")
+(defcustom paren-completer--ignore-commentsp? t "If true, don't check comments for delimiters.")
+(defcustom paren-completer--ignore-stringsp? t "If true, don't check strings for delimiters.")
 
 (defun paren-completer--is-opening-charp? (char)
   "Checks if CHAR is an opening delimiter."
@@ -61,8 +63,8 @@
        (nth 3 (syntax-ppss position))
        )
 
-(defun paren-completer--get-string/comment-open-position? (position)
-  "Finds the opening delimiter to the current string/comment for the given POSITION. Moves cursor to that position"
+(defun paren-completer--is-in-commentp? (position)
+  "Return the POSITION of the start of the current comment, else nil."
        (nth 8 (syntax-ppss position))
        )
 
@@ -86,13 +88,18 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
 (defun paren-completer--process-string-added (string)
   "Process given STRING to build delimiter list."
   ;(message (format "String is %s" string))
-  (let ((delimiter-stack (list)))
+  (let ((old-point (point))
+        (delimiter-stack (list)))
   (dotimes (i (length string))
+    (cond ((and paren-completer--ignore-commentsp? (paren-completer--is-in-commentp? (+ 1 i))) nil)
+          ((and paren-completer--ignore-stringsp? (paren-completer--is-in-stringp? (+ 1 i))) nil)
+          (t
     (if (paren-completer--is-opening-charp? (aref string i))
         (setq delimiter-stack (cons (aref string i) delimiter-stack)))
     (if (paren-completer--is-closing-charp? (aref string i))
         (setq delimiter-stack (cdr delimiter-stack)))
-    )
+    )))
+  (syntax-ppss old-point)
   delimiter-stack))
 
 (defun paren-completer--get-string-upto-point ()
