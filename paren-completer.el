@@ -123,9 +123,10 @@ CLOSED-LIST : Matching closed list of delimiters.  Must be in same order as open
 (defun paren-completer--process-and-add-delimiter (delimiter-adder)
   "Process buffer up to point, then run given DELIMITER-ADDER function."
   (let ((stack (paren-completer--process-string-added (paren-completer--get-string-upto-point))))
-  ;;GetTheCurrentBufferUpToPoint
-  (funcall delimiter-adder stack);;Add the delimiter in, and end
-  ))
+    (let ((stack-length (length stack)))
+  ;;Get the current buffer up to point
+  (funcall delimiter-adder stack) ;;Add the delimiter in, and end
+  stack-length)))
 
 (defun paren-completer--add-delimiter (delimiter-stack)
   "Add a single delimiter.
@@ -174,7 +175,9 @@ DELIMITER-STACK : The delimiters found so far"
 (defun paren-completer-add-single-delimiter ()
   "Process buffer, then add a delimiters."
   (interactive)
-  (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter)
+  (let ((length
+         (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter)))
+    (if (not (eq length 0)) 1 0))
   )
 
 ;;;###autoload
@@ -188,7 +191,9 @@ DELIMITER-STACK : The delimiters found so far"
 (defun paren-completer-add-single-delimiter-with-newline ()
   "Process buffer, then add a delimiters."
   (interactive)
-  (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter-with-newline)
+  (let ((length
+         (paren-completer--process-and-add-delimiter 'paren-completer--add-delimiter-with-newline)))
+    (if (not (eq length 0)) 1 0))
   )
 
 ;;;###autoload
